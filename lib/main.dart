@@ -84,11 +84,11 @@ class _FirstRouteState extends State<FirstRoute> {
   double chamberFrequency3 = 0.0;
   double chamberFrequency4 = 0.0;
   double chamberFrequency5 = 0.0;
-  double chamberTime1 = 0.0;
-  double chamberTime2 = 0.0;
-  double chamberTime3 = 0.0;
-  double chamberTime5 = 0.0;
-  double chamberTime4 = 0.0;
+  double chamberTime1 = 0;
+  double chamberTime2 = 0;
+  double chamberTime3 = 0;
+  double chamberTime5 = 0;
+  double chamberTime4 = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -124,27 +124,28 @@ class _FirstRouteState extends State<FirstRoute> {
               child: const Text('Frequency'),
             ),
 
-          const SizedBox(height: 10), // 添加一点空间
+          const SizedBox(height: 10), // 添加一點空間
 
-            ElevatedButton(
-              onPressed: () async {
-                final List<double>? selectedTimes = await Navigator.push<List<double>>(
-                  context,
-                  MaterialPageRoute(builder: (context) => const ChamberTimeControlPage()),
-                );
-                if (selectedTimes != null && selectedTimes.isNotEmpty) {
-                  setState(() {
-                    chamberTime1 = selectedTimes[0];
-                    chamberTime2 = selectedTimes[1];
-                    chamberTime3 = selectedTimes[2];
-                    chamberTime4 = selectedTimes[3];
-                    chamberTime5 = selectedTimes[4];
-                  });
-                }
-              },
-              child: const Text('Time'),
-            ),
-            const SizedBox(height: 20),
+           ElevatedButton(
+            onPressed: () async {
+              final List<double>? selectedTimes = await Navigator.push<List<double>>(
+                context,
+                MaterialPageRoute(builder: (context) => const ChamberTimeControlPage()),
+              );
+              if (selectedTimes != null && selectedTimes.isNotEmpty) {
+                setState(() {
+                  // 使用 round() 方法对返回的时间值进行取整
+                  chamberTime1 = selectedTimes[0].round().toDouble();
+                  chamberTime2 = selectedTimes[1].round().toDouble();
+                  chamberTime3 = selectedTimes[2].round().toDouble();
+                  chamberTime4 = selectedTimes[3].round().toDouble();
+                  chamberTime5 = selectedTimes[4].round().toDouble();
+                });
+              }
+            },
+            child: const Text('Time'),
+          ),
+
           const SizedBox(height: 20),
           Text('Chamber 1 (Frequency, time): ($chamberFrequency1 hz, $chamberTime1 sec)'),
           Text('Chamber 2 (Frequency, time): ($chamberFrequency2 hz, $chamberTime2 sec)'),
@@ -297,19 +298,19 @@ class _ChamberTimeControlPageState extends State<ChamberTimeControlPage> {
     return Column(
       children: [
         Text(
-          '$title: ${value.toStringAsFixed(1)} sec',
+          '$title: ${value.round()} sec',
           style: Theme.of(context).textTheme.headlineMedium,
         ),
         SfSlider(
           min: 0.0,
-          max: 60.0, // 假设最大时间为60分钟
+          max: 60.0, // 最大時間
           value: value,
           interval: 10,
           showTicks: true,
           showLabels: true,
           enableTooltip: true,
-          minorTicksPerInterval: 1,
-          stepSize: 1.0, // 可以调整步长为1分钟
+          minorTicksPerInterval: 0,
+          stepSize: 1.0, // 時間步長为1秒
           onChanged: (newValue) => onChanged(newValue),
         ),
       ],
